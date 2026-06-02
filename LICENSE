@@ -1,0 +1,27 @@
+
+---
+
+### 2. .gitignore
+Save this as `.gitignore`. This prevents unnecessary system files from being uploaded to Git.
+
+```text
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE specific files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 1,
+    "handle": "@tech_guru_alex",
+    "niche": "tech",
+    "followers": 150000,
+    "avg_likes": 12000,
+    "avg_comments": 450,
+    "posting_frequency": 5,
+    "audience_age": "18-34",
+    "description": "Reviews the latest gadgets and AI software."
+  },
+  {
+    "id": 2,
+    "handle": "@fit_fiona",
+    "niche": "fitness",
+    "followers": 50000,
+    "avg_likes": 3500,
+    "avg_comments": 200,
+    "posting_frequency": 4,
+    "audience_age": "25-40",
+    "description": "Daily home workouts and nutrition tips."
+  },
+  {
+    "id": 3,
+    "handle": "@style_sam",
+    "niche": "fashion",
+    "followers": 1200000,
+    "avg_likes": 15000,
+    "avg_comments": 300,
+    "posting_frequency": 2,
+    "audience_age": "16-24",
+    "description": "High fashion streetwear photography."
+  }
+]

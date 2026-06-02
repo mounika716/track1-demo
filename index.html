@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Influencer Intelligence Engine | Ratefluencer</title>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4338ca;
+            --secondary: #ec4899;
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        header {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+
+        /* Layout */
+        main {
+            flex: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 900px) {
+            main {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Cards */
+        .card {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+        }
+
+        h2 {
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+            color: var(--text);
+            border-left: 4px solid var(--primary);
+            padding-left: 1rem;
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--text-muted);
+            color: var(--text-muted);
+            margin-top: 1rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        /* Results Area */
+        #results-area {
+            display: none; /* Hidden by default */
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Score Visualization */
+        .score-hero {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .score-value {
+            font-size: 4rem;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--success), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+        }
+
+        .score-label {
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Progress Bars */
+        .metric-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .metric-label {
+            width: 140px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .metric-bar-bg {
+            flex: 1;
+            height: 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 0 1rem;
+        }
+
+        .metric-bar-fill {
+            height: 100%;
+            border-radius: 5px;
+            width: 0%;
+            transition: width 1s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .metric-value {
+            width: 40px;
+            text-align: right;
+            font-weight: bold;
+        }
+
+        /* Insight Box */
+        .insight-box {
+            margin-top: 2rem;
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        
+        .insight-icon {
+            font-size: 1.2rem;
+        }
+
+        .insight.warning { background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); color: var(--warning); }
+        .insight.success { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); color: var(--success); }
+        .insight.info { background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.3); color: var(--primary); }
+
+        /* Loading State */
+        .loader {
+            display: none;
+            text-align: center;
+            padding: 4rem;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255,255,255,0.1);
+            border-top: 5px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Brand Recommendation Tag */
+        .brand-tag {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.1);
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+            margin-top: 0.5rem;
+            color: var(--text-muted);
+        }
+
+        .brand-tag.match {
+            background: var(--primary);
+            color: white;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">InfluencerAI Engine</div>
+        <div style="font-size: 0.8rem; color: var(--text-muted);">Powered by ML & RAG Simulation</div>
+    </header>
+
+    <main>
+        <!-- Input Panel -->
+        <section class="card">
+            <h2>Influencer Data Collection</h2>
+            <form id="analysis-form">
+                <div class="form-group">
+                    <label>Influencer Handle</label>
+                    <input type="text" id="handle" placeholder="@creator_name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Content Category (Niche)</label>
+                    <select id="niche">
+                        <option value="tech">Technology & Gadgets</option>
+                        <option value="fashion">Fashion & Apparel</option>
+                        <option value="fitness">Health & Fitness</option>
+                        <option value="travel">Travel & Lifestyle</option>
+                        <option value="gaming">Gaming & Esports</option>
+                        <option value="food">Food & Beverage</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Followers Count</label>
+                    <input type="number" id="followers" placeholder="e.g. 50000" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Avg. Likes per Post</label>
+                    <input type="number" id="likes" placeholder="e.g. 2000" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Avg. Comments per Post</label>
+                    <input type="number" id="comments" placeholder="e.g. 150" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Posting Frequency (posts/week)</label>
+                    <input type="number" id="frequency" min="0" max="20" value="3">
+                </div>
+
+                <div class="form-group">
+                    <label>Target Brand Description (for Matching)</label>
+                    <input type="text" id="brand-desc" placeholder="e.g. Nike, Gymshark, Sustainable Coffee">
+                </div>
+
+                <button type="submit" class="btn btn-primary">Run Intelligence Engine</button>
+                <button type="button" class="btn btn-secondary" onclick="loadDemoData()">Load Demo Data</button>
+            </form>
+        </section>
+
+        <!-- Output Panel -->
+        <section class="card">
+            <h2>Analysis Dashboard</h2>
+            
+            <!-- Loader -->
+            <div id="loader" class="loader">
+                <div class="spinner"></div>
+                <p>Running Logistic Regression Models...</p>
+                <p style="font-size: 0.8rem; color: var(--text-muted)">Detecting Bots & Embeddings...</p>
+            </div>
+
+            <!-- Results -->
+            <div id="results-area">
+                <div class="score-hero">
+                    <div class="score-value" id="final-score">0</div>
+                    <div class="score-label">Ratefluencer Score™</div>
+                </div>
+
+                <div class="metric-row">
+                    <span class="metric-label">Authenticity</span>
+                    <div class="metric-bar-bg">
+                        <div class="metric-bar-fill" id="bar-auth" style="background-color: var(--success);"></div>
+                    </div>
+                    <span class="metric-value" id="score-auth">0</span>
+                </div>
+
+                <div class="metric-row">
+                    <span class="metric-label">Growth Potential</span>
+                    <div class="metric-bar-bg">
+                        <div class="metric-bar-fill" id="bar-growth" style="background-color: var(--secondary);"></div>
+                    </div>
+                    <span class="metric-value" id="score-growth">0</span>
+                </div>
+
+                <div class="metric-row">
+                    <span class="metric-label">Brand Match</span>
+                    <div class="metric-bar-bg">
+                        <div class="metric-bar-fill" id="bar-brand" style="background-color: var(--primary);"></div>
+                    </div>
+                    <span class="metric-value" id="score-brand">0</span>
+                </div>
+
+                <div class="metric-row">
+                    <span class="metric-label">Engagement Quality</span>
+                    <div class="metric-bar-bg">
+                        <div class="metric-bar-fill" id="bar-engage" style="background-color: var(--warning);"></div>
+                    </div>
+                    <span class="metric-value" id="score-engage">0</span>
+                </div>
+
+                <div id="insights-container">
+                    <!-- Dynamic Insights will go here -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // DOM Elements
+        const form = document.getElementById('analysis-form');
+        const loader = document.getElementById('loader');
+        const resultsArea = document.getElementById('results-area');
+        
+        // Output Elements
+        const elFinalScore = document.getElementById('final-score');
+        const elScoreAuth = document.getElementById('score-auth');
+        const elScoreGrowth = document.getElementById('score-growth');
+        const elScoreBrand = document.getElementById('score-brand');
+        const elScoreEngage = document.getElementById('score-engage');
+        
+        const barAuth = document.getElementById('bar-auth');
+        const barGrowth = document.getElementById('bar-growth');
+        const barBrand = document.getElementById('bar-brand');
+        const barEngage = document.getElementById('bar-engage');
+        
+        const insightsContainer = document.getElementById('insights-container');
+
+        // Form Submission
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            startAnalysis();
+        });
+
+        function startAnalysis() {
+            // UI Reset
+            resultsArea.style.display = 'none';
+            loader.style.display = 'block';
+
+            // Get Data
+            const data = {
+                handle: document.getElementById('handle').value,
+                niche: document.getElementById('niche').value,
+                followers: parseFloat(document.getElementById('followers').value),
+                likes: parseFloat(document.getElementById('likes').value),
+                comments: parseFloat(document.getElementById('comments').value),
+                frequency: parseFloat(document.getElementById('frequency').value),
+                brandDesc: document.getElementById('brand-desc').value.toLowerCase()
+            };
+
+            // Simulate AI Processing Delay (1.5 seconds)
+            setTimeout(() => {
+                calculateScores(data);
+                loader.style.display = 'none';
+                resultsArea.style.display = 'block';
+            }, 1500);
+        }
+
+        function calculateScores(data) {
+            // 1. Engagement Rate Calculation
+            const totalInteractions = data.likes + data.comments;
+            const engagementRate = (totalInteractions / data.followers) * 100;
+
+            // 2. Authenticity Detection Logic (ML Simulation)
+            // High follower counts with unrealistic engagement or very low consistency flags as fake
+            let authenticityScore = 100;
+            let insights = [];
+
+            if (data.followers > 100000 && engagementRate > 15) {
+                authenticityScore -= 30; // Likely bots/pods
+                insights.push({ type: 'warning', text: 'Engagement pods detected. Unnatural spike in interactions relative to size.' });
+            } else if (engagementRate < 0.5) {
+                authenticityScore -= 20; // Bought followers
+                insights.push({ type: 'warning', text: 'Low activity suggests purchased followers or inactive audience.' });
+            } else {
+                insights.push({ type: 'success', text: 'Audience demographics and engagement patterns appear organic.' });
+            }
+
+            // 3. Growth Prediction Engine Logic
+            // Based on frequency and niche trends (simulated)
+            let growthScore = 50;
+            if (data.frequency >= 4) growthScore += 30;
+            else if (data.frequency >= 2) growthScore += 10;
+            else growthScore -= 10;
+
+            // Niche multiplier (Tech grows faster than Books in this sim)
+            const nicheGrowthFactors = { 'tech': 1.2, 'gaming': 1.1, 'fitness': 1.0, 'fashion': 1.0, 'travel': 0.9, 'food': 0.8 };
+            growthScore *= (nicheGrowthFactors[data.niche] || 1);
+            
+            // Cap score
+            growthScore = Math.min(100, Math.max(0, growthScore));
+            insights.push({ type: 'info', text: `Predicted monthly growth: +${(growthScore / 5).toFixed(1)}% based on posting consistency.` });
+
+            // 4. Brand Matching System (RAG / NLP Simulation)
+            let brandScore = 0;
+            const keywords = {
+                'tech': ['software', 'gadget', 'ai', 'coding', 'computer'],
+                'fashion': ['clothing', 'style', 'wear', 'dress', 'shoe'],
+                'fitness': ['gym', 'workout', 'health', 'protein', 'sport'],
+                'travel': ['hotel', 'flight', 'visit', 'place', 'trip'],
+                'gaming': ['game', 'play', 'console', 'esport', 'stream'],
+                'food': ['eat', 'drink', 'restaurant', 'cook', 'meal']
+            };
+
+            // Simple keyword overlap check
+            const nicheKeywords = keywords[data.niche] || [];
+            const brandWords = data.brandDesc.split(' ');
+            let matchCount = 0;
+            
+            nicheKeywords.forEach(nk => {
+                if(data.brandDesc.includes(nk)) matchCount++;
+            });
+
+            if (matchCount > 0) {
+                brandScore = 85 + (matchCount * 5);
+                if(brandScore > 100) brandScore = 98;
+                insights.push({ type: 'success', text: `Strong semantic match found between creator content and brand description.` });
+            } else {
+                brandScore = Math.floor(Math.random() * 40) + 10; // Low random match if no keywords
+                insights.push({ type: 'warning', text: 'Weak contextual alignment. Consider reviewing content category fit.' });
+            }
+
+            // 5. Engagement Quality (Derived from ER)
+            let engageScore = Math.min(100, (engagementRate * 20)); // 5% ER = 100 score roughly
+            if(engageScore < 0) engageScore = 0;
+
+            // 6. Final Ratefluencer Score (Weighted Average)
+            // Logic: Auth (30%) + Growth (20%) + Brand Match (20%) + Engagement (30%)
+            const finalScore = Math.round(
+                (authenticityScore * 0.30) +
+                (growthScore * 0.20) +
+                (brandScore * 0.20) +
+                (engageScore * 0.30)
+            );
+
+            // Update UI
+            updateUI(finalScore, authenticityScore, growthScore, brandScore, engageScore, insights);
+        }
+
+        function updateUI(final, auth, growth, brand, engage, insights) {
+            // Animate Numbers
+            animateValue(elFinalScore, 0, final, 1000);
+            
+            setTimeout(() => {
+                elScoreAuth.textContent = Math.round(auth);
+                barAuth.style.width = `${auth}%`;
+                
+                elScoreGrowth.textContent = Math.round(growth);
+                barGrowth.style.width = `${growth}%`;
+
+                elScoreBrand.textContent = Math.round(brand);
+                barBrand.style.width = `${brand}%`;
+
+                elScoreEngage.textContent = Math.round(engage);
+                barEngage.style.width = `${engage}%`;
+            }, 100);
+
+            // Render Insights
+            insightsContainer.innerHTML = '';
+            insights.forEach(insight => {
+                const div = document.createElement('div');
+                div.className = `insight-box insight ${insight.type}`;
+                div.innerHTML = `
+                    <div class="insight-icon">${insight.type === 'success' ? '✓' : (insight.type === 'warning' ? '⚠' : 'ℹ')}</div>
+                    <div>${insight.text}</div>
+                `;
+                insightsContainer.appendChild(div);
+            });
+        }
+
+        function animateValue(obj, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = Math.floor(progress * (end - start) + start);
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        function loadDemoData() {
+            document.getElementById('handle').value = "@tech_guru_alex";
+            document.getElementById('niche').value = "tech";
+            document.getElementById('followers').value = "150000";
+            document.getElementById('likes').value = "12000";
+            document.getElementById('comments').value = "450";
+            document.getElementById('frequency').value = "5";
+            document.getElementById('brand-desc').value = "New Laptop, AI Software, Coding Bootcamp";
+        }
+    </script>
+</body>
+</html>
